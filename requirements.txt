@@ -1,0 +1,12 @@
+asgiref==3.9.1
+Django==5.2.5
+sqlparse==0.5.3
+tzdata==2025.2
+psycopg
+django-crispy-forms
+crispy-bootstrap5
+Pillow
+dj-database-url
+whitenoise
+gunicorn 
+coverage
