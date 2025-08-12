@@ -4,6 +4,10 @@ from django.contrib.auth.forms import UserCreationForm #Inheritance Relationship
 
 from .models import Profile
 
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ("email",)
+        
 class UserRegisterForm(UserCreationForm):
   email = forms.EmailField()
 

@@ -17,6 +17,7 @@
             {{ u_form|crispy }} <!-- Updated to load the user form and let crispy take care of the formatting -->
             {{ p_form|crispy }} <!-- Updated to load the profile form and let crispy take care of the formatting -->
         </fieldset>
+        <a href="{% url 'password_change' %}">Change password</a>
         <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Update</button> <!-- Updated button to display Profile Info -->
         </div>

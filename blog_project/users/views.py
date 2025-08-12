@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required #Added import here
 from django.contrib import messages #import for messages
 
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm 
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CustomUserCreationForm 
+from .models import Profile
 
 # Create your views here.
 def dashboard(request):
@@ -10,14 +11,15 @@ def dashboard(request):
 
 def register(request):
   if request.method == 'POST':
-    form = UserRegisterForm(request.POST)
+    form = CustomUserCreationForm(request.POST)
     if form.is_valid():
-      form.save()
+      user = form.save()  # get the created User instance
+      Profile.objects.get_or_create(user=user)
       username = form.cleaned_data.get('username')
       messages.success(request, f'Account created for {username}!')
       return redirect('login')
   else:
-    form = UserRegisterForm()
+    form = CustomUserCreationForm()
   return render(request, 'registration/register.html', {'form': form})
 
 @login_required
