@@ -129,6 +129,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # users app
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Media for Users app
 MEDIA_ROOT = BASE_DIR / 'media' # Newer modern and Pythonic way 
