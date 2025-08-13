@@ -1,4 +1,5 @@
-# blog/views.py
+
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -43,11 +44,33 @@ class PostListView(ListView):
 
 # Details Page
 class PostDetailView(DetailView):
-  model = Post
-  template_name = 'blog/post_detail.html'
+    model = Post
+    template_name = 'blog/post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comment_set.all().order_by('-created_on')
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle comment submission"""
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user.profile  # Logged-in user's Profile
+            comment.save()
+            messages.success(request, '💬 Your comment has been added!')
+            return redirect('blog:post_detail', pk=self.object.pk)
+
+        # If invalid, re-render the page with the form errors
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
 
 # Create page
-
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'content', 'category']
@@ -56,6 +79,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
+        # add message when form is valid
         messages.success(self.request, 'Your post has been created successfully!')
         return response
     

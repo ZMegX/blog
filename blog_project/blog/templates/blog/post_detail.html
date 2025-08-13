@@ -14,19 +14,38 @@
       </div>
       {% endif %}
     </div>
-    <h2 class="article-title">{{ object.title }}</h2>
-    <h4>Categories:</h4>
-      <ul>
-        {% for category in object.categories.all %}
-          <li>
-            <a href="{% url 'blog:blog_category' category.name %}">{{ category.name }}</a>
-          </li>
-        {% empty %}
-          <li>No categories assigned</li>
-        {% endfor %}
-      </ul>
+        <h2 class="article-title">{{ object.title }}</h2>
+        <h4>Categories:</h4>
+          <ul>
+            {% for category in object.categories.all %}
+              <li>
+                <a href="{% url 'blog:blog_category' category.name %}">{{ category.name }}</a>
+              </li>
+            {% empty %}
+              <li>No categories assigned</li>
+            {% endfor %}
+          </ul>
 
           <p class="article-content">{{ object.content }}</p>
         </div>
+        <h3>Comments</h3>
+          {% for comment in comments %}
+              <div>
+                  <strong>{{ comment.author }}</strong>: {{ comment.body }}
+              </div>
+          {% empty %}
+              <p>No comments yet.</p>
+          {% endfor %}
+          <hr>
+          {% if user.is_authenticated %}
+              <h3>Leave a Comment</h3>
+              <form method="post">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit">Post Comment</button>
+              </form>
+          {% else %}
+              <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+          {% endif %}
       </article>
 {% endblock content %}  
