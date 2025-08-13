@@ -68,8 +68,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # New
   template_name = 'blog/post_update.html'
     
   def form_valid(self, form):
-    form.instance.author = self.request.user
-    return super().form_valid(form)
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your post has been updated!')
+        return response
   
   #Added a new function here to check the user author is correct for the spefice Post.
   def test_func(self):
@@ -78,14 +80,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # New
       return True
     return False
   
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView): # New class PostDeleteView created here
-  model = Post
-  success_url = "/blog" # Here we are redirecting the user back to the homepage after deleting a Post successfully
-  template_name = 'blog/post_delete.html'
-  success_url = reverse_lazy('blog_index')
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = "blog/post_delete.html"
+    success_url = reverse_lazy("blog:blog_index")  # ✅ Redirect to blog homepage
 
-  def test_func(self):
-    post = self.get_object()
-    if self.request.user == post.author:
-      return True
-    return False
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author

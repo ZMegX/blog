@@ -1,5 +1,5 @@
 # blog/urls.py
-app_name = 'blog'
+
 from django.urls import path, include
 from . import views
 from .views import (
@@ -10,6 +10,8 @@ from .views import (
     PostDeleteView,
 )
 from .import views
+
+app_name = 'blog'
 
 urlpatterns = [
     path('', PostListView.as_view(), name='blog_index'),
