@@ -88,3 +88,10 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+    def delete(self, request, *args, **kwargs):
+        post = self.get_object()
+        messages.success(self.request,
+            f"✅ Your post '{post.title}' has been deleted."
+        )
+        return super().delete(request, *args, **kwargs)
