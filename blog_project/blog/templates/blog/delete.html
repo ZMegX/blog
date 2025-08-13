@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="media content-section">
+  <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}"> 
+  <div class="media-body"> 
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ object.author }}</a>
+      <small class="text-muted">{{ object.date_posted|date:'dS, F, Y' }}</small>
+      {% if object.author == user %}
+      <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'blog:post_update' object.id %}">Update</a> <!-- Changed here -->
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'blog:post_delete' object.id %}">Delete</a> <!-- Changed here -->
+      </div>
+      {% endif %}
+    </div>
+    <h2 class="article-title">{{ object.title }}</h2>
+    <h4>Categories:</h4>
+      <ul>
+        {% for category in object.categories.all %}
+          <li>
+            <a href="{% url 'blog:blog_category' category.name %}">{{ category.name }}</a>
+          </li>
+        {% empty %}
+          <li>No categories assigned</li>
+        {% endfor %}
+      </ul>
+
+          <p class="article-content">{{ object.content }}</p>
+        </div>
+      </article>
+{% endblock content %}  

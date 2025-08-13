@@ -1,6 +1,7 @@
-<!-- blog/templates/blog/index.html -->
+<!-- blog/templates/blog/blog_list.html -->
 
 {% extends "base.html" %}
+{% block content %}
 {% block page_title %}
     <h2>Blog Posts</h2>
 {% endblock page_title %}
@@ -21,3 +22,10 @@
         {% endfor %}
     {% endblock posts %}
 {% endblock page_content %}
+        <p>
+            <input
+                value="Add a new item"
+                type="button"
+                onclick="location.href='#'" />
+        </p>
+{% endblock %}
