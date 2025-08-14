@@ -29,7 +29,7 @@ DEBUG = True
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-ALLOWED_HOSTS = ['https://blog-3eyt.onrender.com']
+ALLOWED_HOSTS = ['https://blog-3eyt.onrender.com', '127.0.0.1']
 
 
 # Application definition
