@@ -1,4 +1,5 @@
-
+# blog/views.py
+from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -50,30 +51,28 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comment_set.all().order_by('-created_on')
-        context['form'] = CommentForm()
+        context['comment_form'] = CommentForm()
         return context
 
     def post(self, request, *args, **kwargs):
-        """Handle comment submission"""
+        """Handle adding a comment"""
         self.object = self.get_object()
         form = CommentForm(request.POST)
-
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = self.object
-            comment.author = request.user.profile  # Logged-in user's Profile
+            comment.author = request.user.profile
             comment.save()
-            messages.success(request, '💬 Your comment has been added!')
+            messages.success(request, "💬 Your comment has been added!")
             return redirect('blog:post_detail', pk=self.object.pk)
 
-        # If invalid, re-render the page with the form errors
-        context = self.get_context_data(form=form)
+        # If form invalid, re-render page with errors
+        context = self.get_context_data(comment_form=form)
         return self.render_to_response(context)
-
 # Create page
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'category']
+    fields = ['title', 'content', 'category', 'image']
     template_name = 'blog/post_new.html'
 
     def form_valid(self, form):
@@ -88,7 +87,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # New class created and UpdateView passed in.
   model = Post
-  fields = ['title', 'content', 'category']
+  fields = ['title', 'content', 'category', 'image']
   template_name = 'blog/post_update.html'
     
   def form_valid(self, form):

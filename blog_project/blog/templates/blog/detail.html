@@ -8,10 +8,12 @@
 {% endblock page_title %}
 
 {% block page_content %}
-    <small>
-        <!-- ... -->
-    </small>
-    <p>{{ post.body | linebreaks }}</p>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+    {% endif %}
+
+    <p>{{ post.content|truncatewords:30 }}</p>
+    {% endfor %}
 
     <h3>Leave a comment:</h3>
     <form method="post">
