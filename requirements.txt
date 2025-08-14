@@ -10,3 +10,4 @@ dj-database-url
 whitenoise
 gunicorn 
 coverage
+psycopg[binary]
