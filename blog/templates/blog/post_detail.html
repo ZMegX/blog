@@ -24,7 +24,12 @@
       <h3>Comments</h3>
         {% for comment in comments %}
             <div class="mb-2">
-                <strong>{{ comment.author }}</strong>: {{ comment.body }}
+                <p>{{ comment.body }}</p>
+                <small>by {{ comment.author.user.username }}</small>
+                {% if comment.author.user == request.user %}
+                <a href="{% url 'blog:comment_delete' comment.pk %}">Delete</a>
+                {% endif %}
+            </div>
         {% empty %}
               <p>No comments yet.</p>
         {% endfor %}

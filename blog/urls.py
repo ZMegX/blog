@@ -8,6 +8,7 @@ from .views import (
     PostCreateView, # Import here
     PostUpdateView, # Imported the PostUpdateView we have just created
     PostDeleteView,    
+    CommentDeleteView
 )
 from .import views
 
@@ -20,5 +21,6 @@ urlpatterns = [
     path('category/<str:category>/', views.blog_category, name='blog_category'),    
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'), # Added the url pattern
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 
 ]

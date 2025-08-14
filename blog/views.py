@@ -118,3 +118,16 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             f"✅ Your post '{post.title}' has been deleted."
         )
         return super().delete(request, *args, **kwargs)
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = "blog/comment_delete.html"
+
+    def get_success_url(self):
+        # Redirect back to the post detail page after deletion
+        return reverse('blog:post_detail', kwargs={'pk': self.object.post.pk})
+
+    def test_func(self):
+        # Only allow deletion if the logged-in user is the comment's author
+        comment = self.get_object()
+        return self.request.user == comment.author.user
