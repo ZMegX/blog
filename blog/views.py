@@ -140,3 +140,4 @@ class MyPostsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user).order_by('-date_posted')
+    
