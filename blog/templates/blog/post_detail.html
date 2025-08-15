@@ -21,30 +21,35 @@
             </div>
             {% endif %}
         </div>
-      <h3>Comments</h3>
-        {% for comment in comments %}
-            <div class="mb-2">
-                <p>{{ comment.body }}</p>
-                <small>by {{ comment.author.user.username }}</small>
-                {% if comment.author.user == request.user %}
-                <a href="{% url 'blog:comment_delete' comment.pk %}">Delete</a>
-                {% endif %}
+            <div class="card" style="width: 18rem;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <h3>Comments</h3>
+                        {% for comment in comments %}
+                            <div class="mb-2">
+                                <p>{{ comment.body }}</p>
+                                <small>by {{ comment.author.user.username }}</small>
+                                {% if comment.author.user == request.user %}
+                                <a href="{% url 'blog:comment_delete' comment.pk %}">Delete</a>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                                <p>No comments yet.</p>
+                            {% endfor %}
+                            <hr>
+                            {% if user.is_authenticated %}
+                            <h3>Leave a Comment</h3>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ comment_form|crispy }}
+                                <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+                            </form>
+                            {% else %}
+                            <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+                            {% endif %}
+                    </li>
+                </ul>
             </div>
-        {% empty %}
-              <p>No comments yet.</p>
-        {% endfor %}
-        <hr>
-        {% if user.is_authenticated %}
-        <h3>Leave a Comment</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ comment_form|crispy }}
-            <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
-        </form>
-        {% else %}
-        <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
-        {% endif %}
     </div>
   </div>
-</div>
 {% endblock content %}  

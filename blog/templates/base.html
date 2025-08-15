@@ -23,6 +23,8 @@
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="{% url 'blog:post_new' %}">New Post</a></li>
       <li><a class="dropdown-item" href="{% url 'blog:blog_index' %}">Feed</a></li>
+      <li><a class="dropdown-item" href="{% url 'blog:my_posts' %}">My Posts</a>
+</li>
     </ul> <!-- Change here -->
     <li><a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a></li>
     <li>{% if user.is_authenticated %}

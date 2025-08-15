@@ -131,3 +131,12 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Only allow deletion if the logged-in user is the comment's author
         comment = self.get_object()
         return self.request.user == comment.author.user
+
+# user can only see his posts when logged in    
+class MyPostsView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = "blog/my_posts.html"  
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user).order_by('-date_posted')
