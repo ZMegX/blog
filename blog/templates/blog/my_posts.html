@@ -1,13 +1,45 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>My Posts</h1>
-{% if posts %}
-    {% for post in posts %}
-        <h2><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></h2>
-        <p>{{ post.content|truncatewords:20 }}</p>
-    {% endfor %}
-{% else %}
-    <p>You haven't created any posts yet.</p>
-{% endif %}
+<div class="container" style="max-width: 80%;">
+    <h1 class="mb-4">My Posts</h1>
+
+    {% if posts %}
+    <div class="list-group">
+        {% for post in posts %}
+        <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm p-3">
+            <div class="row g-3 align-items-center">
+                <!-- Image -->
+                <div class="col-md-3 col-12 text-center">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                            class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
+                    {% else %}
+                        <img src="..." alt="No image"
+                            class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
+                    {% endif %}
+                </div>
+
+                <!-- Title & Preview -->
+                <div class="col-md-7 col-12">
+                    <h4 class="mb-1">
+                        <a href="{% url 'blog:post_detail' post.pk %}" class="text-decoration-none text-dark">
+                            {{ post.title }}
+                        </a>
+                    </h4>
+                    <p class="mb-2 text-muted">{{ post.content|truncatewords:20 }}</p>
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-2 col-12 text-md-end text-center">
+                    <a href="{% url 'blog:post_update' post.pk %}" class="btn btn-sm btn-outline-primary">Update</a>
+                    <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>You haven't created any posts yet.</p>
+    {% endif %}
+</div>
 {% endblock %}

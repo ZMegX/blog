@@ -1,17 +1,46 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %} <!-- Updated here to load crispy forms -->
+{% load crispy_forms_tags static %}
+
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Blog Post</legend> <!-- Text Changed here -->
-                    {{ form|crispy }} <!-- Updated to load the form and let crispy take care of the formating -->
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Post</button> <!-- Text Changed here -->
+<div class="container" style="max-width: 80%;">
+    <h2 class="text-center mb-4">Update Blog Post</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="row g-4">
+        {% csrf_token %}
+
+        <!-- Left column: Image preview + upload -->
+        <div class="col-md-4 text-center">
+            {% if form.instance.image %}
+                <div class="border rounded p-2 shadow-sm mb-3">
+                    <img src="{{ form.instance.image.url }}" 
+                         alt="Post image"
+                         class="img-fluid rounded" 
+                         style="max-height: 300px; object-fit: cover;">
+                </div>
+            {% else %}
+                <div class="border rounded p-2 shadow-sm mb-3">
+                    <img src="{% static 'img/placeholder.jpg' %}" 
+                         alt="No image"
+                         class="img-fluid rounded" 
+                         style="max-height: 300px; object-fit: cover;">
+                </div>
+            {% endif %}
+
+            <div class="mb-3">
+                {{ form.image|as_crispy_field }}
             </div>
-        </form>
-        <!-- Changed here, div removed -->
-    </div>
-{% endblock content %}
+        </div>
+
+        <!-- Right column: Text fields -->
+        <div class="col-md-8">
+            <fieldset class="form-group">
+                {{ form.title|as_crispy_field }}
+                {{ form.content|as_crispy_field }}
+            </fieldset>
+            <div class="form-group mt-3">
+                <button class="btn btn-primary w-100" type="submit">Update Post</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
