@@ -56,7 +56,11 @@
               <a class="nav-link {% if request.resolver_match.url_name == 'blog_index' %}active{% endif %}" href="{% url 'blog:blog_index' %}">Feed</a>
             </li>
           </ul>
-
+          <!-- Live Search bar -->
+           <div class="position-relative">
+              <input class="form-control me-2" type="search" placeholder="Search posts..." id="live-search" autocomplete="off">
+              <div class="list-group position-absolute w-100" id="search-results" style="z-index:1000;"></div>
+            </div>
           <!-- Right-side: login/logout -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             {% if user.is_authenticated %}
@@ -105,6 +109,40 @@
 <hr>
 
 {% block content %}{% endblock %}
+    <script>
+const searchInput = document.getElementById('live-search');
+const resultsDiv = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const query = this.value;
+    if (query.length < 1) {
+        resultsDiv.innerHTML = '';
+        return;
+    }
+
+    fetch(`/blog/search-suggestions/?q=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            resultsDiv.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const a = document.createElement('a');
+                    a.href = item.url;
+                    a.className = 'list-group-item list-group-item-action';
+                    a.textContent = item.title;
+                    resultsDiv.appendChild(a);
+                });
+            }
+        });
+});
+
+// Optional: close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target)) {
+        resultsDiv.innerHTML = '';
+    }
+});
+</script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 

@@ -2,8 +2,9 @@
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import JsonResponse #for live search bar
 from django.shortcuts import render
 from blog.models import Post, Comment
 from blog.forms import CommentForm
@@ -140,4 +141,14 @@ class MyPostsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user).order_by('-date_posted')
-    
+
+
+def search_suggestions(request):
+    query = request.GET.get('q', '')
+    suggestions = []
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query)
+        )[:5]  # limit results
+        suggestions = [{'title': post.title, 'url': post.get_absolute_url()} for post in posts]
+    return JsonResponse(suggestions, safe=False)

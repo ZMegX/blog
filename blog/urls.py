@@ -10,6 +10,7 @@ from .views import (
     PostDeleteView,    
     CommentDeleteView,
     MyPostsView,
+    
 )
 from .import views
 
@@ -24,5 +25,5 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
     path('posts/', MyPostsView.as_view(), name='my_posts'),
-
+    path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
 ]
