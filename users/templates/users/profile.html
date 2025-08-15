@@ -1,36 +1,56 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %} <!-- Updated here to load crispy forms -->
+{% load crispy_forms_tags %}
+
 {% block content %}
-<div class="container text-center">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 p-3">
-      <div class="content-section">
-        <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
-                <div class="media-body">
+<div class="container" style="min-height: 80vh;">
+    <div class="row align-items-center h-100">
+        <!-- Left: Profile Info & Form -->
+        <div class="col-md-6 d-flex justify-content-center">
+            <div class="card shadow-sm w-100" style="max-width: 500px;">
+                <div class="card-body text-center">
+                    <!-- Profile image -->
+                    <img class="rounded-circle mb-3" 
+                         src="{{ user.profile.image.url }}" 
+                         alt="Profile picture" 
+                         style="width: 120px; height: 120px; object-fit: cover;">
+
                     <h2 class="account-heading">{{ user.username }}</h2>
                     <p class="text-secondary">{{ user.email }}</p>
+
+                    <!-- Profile update form -->
+                    <form method="POST" enctype="multipart/form-data" class="text-start">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Your Info</legend>
+                            {{ u_form|crispy }}
+                            {{ p_form|crispy }}
+                        </fieldset>
+
+                        <div class="row g-2 mt-3">
+                            <div class="col-12 col-sm-6">
+                                <a href="{% url 'password_change' %}" class="btn btn-outline-warning w-100">
+                                    Change Password
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <button class="btn btn-primary w-100" type="submit">
+                                    Update Profile
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-    <!-- FORM HERE -->
-            <form method="POST" enctype="multipart/form-data"> <!-- Added an encoding type to save the image in the background -->
-            {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Your info</legend> <!-- Updated legend to display Profile Info -->
-                        {{ u_form|crispy }} <!-- Updated to load the user form and let crispy take care of the formatting -->
-                        {{ p_form|crispy }} <!-- Updated to load the profile form and let crispy take care of the formatting -->
-                </fieldset>
-                <button class="btn btn-outline-info" type="submit">
-                  <a href="{% url 'password_change' %}">Change password</a>
-                </button>
-                <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Update</button> <!-- Updated button to display Profile Info -->
-                </div>
-            </form>
+        </div>
+
+        <!-- Right: Placeholder or Image -->
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <!-- Replace with your own image -->
+            <img src="..." 
+                 alt="Profile side image" 
+                 class="img-fluid rounded shadow-sm"
+                 style="max-height: 400px;">
+        </div>
+    </div>
 </div>
-    </div>
-    <div class="col">
-      2 of 2
-    </div>
-  </div>
 {% endblock content %}

@@ -2,21 +2,39 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="content-section">
-    <form method="POST">  
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Join Here</legend>
-            {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
-            <button class="btn btn-outline" type="submit">Sign Up</button>
+<div class="container" style="min-height: 80vh;">
+    <div class="row align-items-center h-100">
+        <!-- Left: Sign Up Form -->
+        <div class="col-md-6 d-flex justify-content-center">
+            <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Join Here</h3>
+
+                    <form method="POST">  
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            {{ form|crispy }}
+                        </fieldset>  
+
+                        <button class="btn btn-success w-100 mt-3" type="submit">Sign Up</button>
+                    </form>
+
+                    <div class="border-top pt-3 mt-4">
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary w-100">
+                            Already Have an Account? Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
-        </small>
+
+        <!-- Right: Image -->
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="https://picsum.photos/200" 
+                 alt="Sign up" 
+                 class="img-fluid rounded shadow-sm"
+                 style="max-height: 400px;">
+        </div>
     </div>
 </div>
 {% endblock content %}
