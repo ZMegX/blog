@@ -1,4 +1,5 @@
 # blog/views.py
+import cloudinary.uploader
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -7,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse #for live search bar
 from django.shortcuts import render
 from blog.models import Post, Comment
-from blog.forms import CommentForm
+from blog.forms import CommentForm, PostUpdateForm, PostCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView, 
@@ -73,36 +74,39 @@ class PostDetailView(DetailView):
 # Create page
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'category', 'image']
+    form_class = PostCreateForm
     template_name = 'blog/post_new.html'
+    success_url = reverse_lazy('blog:post_detail')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        image_file = self.request.FILES.get('image')
+        if image_file:
+            upload_result = cloudinary.uploader.upload(image_file, folder="post_images")
+            form.instance.image = upload_result['secure_url']
         response = super().form_valid(form)
-        # add message when form is valid
         messages.success(self.request, 'Your post has been created successfully!')
         return response
     
-    def get_success_url(self):
-        return reverse('blog:post_detail', kwargs={'pk': self.object.pk})
     
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # New class created and UpdateView passed in.
-  model = Post
-  fields = ['title', 'content', 'category', 'image']
-  template_name = 'blog/post_update.html'
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostUpdateForm
+    template_name = 'blog/post_update.html'
     
-  def form_valid(self, form):
+    def form_valid(self, form):
         form.instance.author = self.request.user
+        image_file = self.request.FILES.get('image')
+        if image_file:
+            upload_result = cloudinary.uploader.upload(image_file, folder="post_images")
+            form.instance.image = upload_result['secure_url']
         response = super().form_valid(form)
         messages.success(self.request, 'Your post has been updated!')
         return response
-  
-  #Added a new function here to check the user author is correct for the spefice Post.
-  def test_func(self):
-    post = self.get_object()
-    if self.request.user == post.author:
-      return True
-    return False
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
   
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
