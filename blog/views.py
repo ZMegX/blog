@@ -7,7 +7,8 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse #for live search bar
 from django.shortcuts import render
-from blog.models import Post, Comment
+from django.core.paginator import Paginator
+from blog.models import Post, Comment, Category
 from blog.forms import CommentForm, PostUpdateForm, PostCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -160,3 +161,20 @@ def search_suggestions(request):
         )[:5]  # limit results
         suggestions = [{'title': post.title, 'url': post.get_absolute_url()} for post in posts]
     return JsonResponse(suggestions, safe=False)
+
+
+def category_posts(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    
+    # Get posts from this category
+    post_list = Post.objects.filter(category=category).order_by('-created_at')
+    
+    # Apply pagination (6 posts per page, adjust as needed)
+    paginator = Paginator(post_list, 6)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+
+    return render(request, "blog/category_posts.html", {
+        "category": category,
+        "posts": posts,
+    })

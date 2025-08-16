@@ -5,15 +5,35 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
 from cloudinary.models import CloudinaryField
+from django.utils.text import slugify
+
+# blog/models.py
+from django.db import models
+from django.utils.text import slugify
 
 class Category(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)  # unique=True optional but recommended
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     class Meta:
         verbose_name_plural = "categories"
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.name) or "category"
+            slug = base
+            i = 1
+            from .models import Category  # safe; same class
+            while Category.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base}-{i}"
+                i += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
+
+    
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
