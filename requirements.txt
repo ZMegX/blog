@@ -11,3 +11,5 @@ whitenoise
 gunicorn 
 coverage
 psycopg[binary]
+cloudinary
+django-cloudinary-storage
