@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +155,6 @@ LOGOUT_REDIRECT_URL = 'login'
 # Media for Users app
 MEDIA_ROOT = BASE_DIR / 'media' # Newer modern and Pythonic way 
 MEDIA_URL = '/media/'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
