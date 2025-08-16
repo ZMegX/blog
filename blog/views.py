@@ -163,13 +163,10 @@ def search_suggestions(request):
     return JsonResponse(suggestions, safe=False)
 
 
-def category_posts(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
-    
-    # Get posts from this category
+def category_posts(request, slug):
+    category = get_object_or_404(Category, slug=slug)
     post_list = Post.objects.filter(category=category).order_by('-created_at')
-    
-    # Apply pagination (6 posts per page, adjust as needed)
+
     paginator = Paginator(post_list, 6)
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)

@@ -7,31 +7,21 @@ from PIL import Image
 from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
 
-# blog/models.py
-from django.db import models
-from django.utils.text import slugify
 
 class Category(models.Model):
-    name = models.CharField(max_length=30, unique=True)  # unique=True optional but recommended
-    slug = models.SlugField(max_length=50, unique=True, blank=True)
-
-    class Meta:
-        verbose_name_plural = "categories"
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            base = slugify(self.name) or "category"
-            slug = base
-            i = 1
-            from .models import Category  # safe; same class
-            while Category.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base}-{i}"
-                i += 1
-            self.slug = slug
+        if not self.slug:  # auto-generate slug only if not provided
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("blog:category_posts", kwargs={"slug": self.slug})
 
     
 

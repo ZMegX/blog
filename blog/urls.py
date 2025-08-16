@@ -24,4 +24,5 @@ urlpatterns = [
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
     path('posts/', MyPostsView.as_view(), name='my_posts'),
     path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
 ]
