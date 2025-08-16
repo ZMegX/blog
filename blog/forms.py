@@ -8,16 +8,20 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['body']
 
+
 class PostUpdateForm(forms.ModelForm):
     image = forms.FileField(required=False)  # This makes the input a file upload
-
     class Meta:
         model = Post
         fields = ['title', 'content', 'category', 'image']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make the image field optional during update
+        self.fields['image'].required = False
 
 class PostCreateForm(forms.ModelForm):
     image = forms.FileField(required=False)
-
     class Meta:
         model = Post
         fields = ['title', 'content', 'category', 'image']

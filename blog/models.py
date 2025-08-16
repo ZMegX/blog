@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
+from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=30)
@@ -17,7 +18,7 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    image = models.URLField(blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)    
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
@@ -33,14 +34,6 @@ class Post(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-        if self.image:
-            img = Image.open(self.image.path)
-
-            if img.height > 628 or img.width > 1200:
-                output_size = (628, 1200)
-                img.thumbnail(output_size)
-                img.save(self.image.path)
 
     def get_absolute_url(self): # Change here
         return reverse('blog:post_detail', kwargs={'pk': self.pk}) 

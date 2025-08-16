@@ -8,7 +8,7 @@
         <div class="col-lg-8">
             <div class="card shadow-lg border-0">
                 {% if post.image %}
-                <img src="{{ post.image }}" class="card-img-top" 
+                <img src="{{ post.image.url }}" class="card-img-top" 
                      alt="{{ post.title }}" 
                      style="height: 350px; object-fit: cover; transition: transform 0.3s;">
                 {% else %}
