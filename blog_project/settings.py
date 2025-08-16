@@ -178,9 +178,7 @@ EMAIL_HOST_USER = 'picardomegan@gmail.com'          # your Gmail address
 EMAIL_HOST_PASSWORD = 'xxhrvsixiystazsr'    # your Gmail app password
 DEFAULT_FROM_EMAIL = 'Blog_project'
 
-cloudinary.config( 
-  cloud_name = "CLOUDINARY_CLOUD_NAME",  
-  api_key = "CLOUDINARY_API_KEY",  
-  api_secret = "API_SECRET",  
-  secure = True
+
+cloudinary.config(
+    secure=True
 )
