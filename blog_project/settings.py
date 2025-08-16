@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 if os.environ.get("DJANGO_DEVELOPMENT") == "True":
     from dotenv import load_dotenv
@@ -174,3 +177,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'picardomegan@gmail.com'          # your Gmail address
 EMAIL_HOST_PASSWORD = 'xxhrvsixiystazsr'    # your Gmail app password
 DEFAULT_FROM_EMAIL = 'Blog_project'
+
+cloudinary.config( 
+  cloud_name = "CLOUDINARY_CLOUD_NAME",  
+  api_key = "CLOUDINARY_API_KEY",  
+  api_secret = "API_SECRET",  
+  secure = True
+)
