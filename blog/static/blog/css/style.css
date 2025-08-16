@@ -1,0 +1,7 @@
+.card:hover img {
+    transform: scale(1.03);
+}
+.card-title a:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+}
