@@ -23,8 +23,13 @@ class UserUpdateForm(forms.ModelForm):
     fields = ['username', 'first_name', 'last_name', 'email']
 
 class ProfileUpdateForm(forms.ModelForm):
-  image = forms.FileField(required=False)
+    class Meta:
+        model = Profile
+        fields = ['image']  # CloudinaryField handles uploads automatically
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
-  class Meta:
-    model = Profile 
-    fields = ['image']    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['image'].required = False  # optional
