@@ -23,6 +23,8 @@ class UserUpdateForm(forms.ModelForm):
     fields = ['username', 'first_name', 'last_name', 'email']
 
 class ProfileUpdateForm(forms.ModelForm):
+  image = forms.FileField(required=False)
+
   class Meta:
     model = Profile 
     fields = ['image']    

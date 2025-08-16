@@ -23,7 +23,7 @@
                         <fieldset class="form-group">
                             <legend class="border-bottom mb-4">Your Info</legend>
                             {{ u_form|crispy }}
-                            {{ p_form|crispy }}
+                            {{ p_form.image|as_crispy_field }}
                         </fieldset>
 
                         <div class="row g-2 mt-3">

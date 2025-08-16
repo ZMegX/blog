@@ -8,7 +8,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=254, default='example@email.com')
-    image = models.URLField(default='https://res.cloudinary.com/dgmvyic4g/image/upload/v1/default.png')
-
+    image = models.URLField(blank=True, null=True)
+    
     def __str__(self):
         return f'{self.user.username}'
